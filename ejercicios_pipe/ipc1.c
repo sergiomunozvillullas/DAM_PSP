@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/wait.h> 
 #include <time.h>
+#include <string.h>
 
 void main(){
 
@@ -10,9 +11,16 @@ void main(){
      time_t hora;
      char *fecha ;
      int fd[2]; 
-     char buffer[30];
-     pid_t pid;
-    
+     
+     pid_t pid,pid_proceso;
+     
+     //para que lo tenga el hijo
+	time(&hora);
+	fecha = ctime(&hora) ;
+	//para saber cuanto la logitud de la fecha
+	//+1 para caracer nulo
+	size_t longitud = strlen(fecha)+1;
+	char buffer[longitud];
      // Creamos el pipe
      pipe(fd); 
      
@@ -23,27 +31,26 @@ void main(){
      //hijo
      {
                 close(fd[1]); // Cierra el descriptor de escritura
-                read(fd[0], buffer, 21);
-                printf("\t Mensaje leido del pipe: %s \n", buffer);
+                read(fd[0], buffer, longitud);
+                printf("La fecha es: %s \n", buffer);
+                printf("pid del hijo= %d\n",getpid());
+
      
      }
      
      else
      //padre
      {
-     
 
-		time(&hora);
-		fecha = ctime(&hora) ;
+		
      
-     
-                close(fd[0]); // Cierra el descriptor de lectura
-                printf("El padre escribe en el PIPE...\n");
-                write(fd[1], time, 10);
-                write(fd[1], " ", 1);
-                write(fd[1], fecha, 10);   
-                //para que el hijo no se quede huerfano
-                wait(NULL);    
+	close(fd[0]); // Cierra el descriptor de lectura
+        
+	
+         write(fd[1], fecha, longitud);
+
+        // Para que el hijo no se quede huérfano
+        wait(NULL); 
      }
      
         
