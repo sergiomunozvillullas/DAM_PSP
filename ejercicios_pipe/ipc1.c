@@ -4,7 +4,6 @@
 #include <sys/wait.h> 
 #include <time.h>
 #include <string.h>
-
 void main(){
 
 
