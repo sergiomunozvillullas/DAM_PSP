@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
-
+//fdsf
 
 //Función de manejo de la señal
 void sig_handler(int signo)
